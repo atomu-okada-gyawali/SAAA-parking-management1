@@ -53,10 +53,10 @@ lbl1.place(x =600, y = 30 )
 lbl2 = Label(root, text = "make your own space", bg = "white", fg = "black", font = ("Georgia", 12))
 lbl2.place(x =692, y = 85 )
 
-log_btn = Button(root, text = "          LOGIN          ", fg = "black", bg = "#FFC125", font = ("Georgia", 14))
+log_btn = Button(root, text = "          LOGIN           ", fg = "black", bg = "#FFC125", font = ("Georgia", 14))
 log_btn.place(x =700, y = 660 )
 
-signup_btn = Button(root, text = "         SIGNUP         ", bg = "#FFC125", fg = "black", font = ("Georgia",14),command = goto_registration)
+signup_btn = Button(root, text = "         SIGNUP          ", bg = "#FFC125", fg = "black", font = ("Georgia",14),command = goto_registration)
 signup_btn.place(x = 700, y=740)
 
 
