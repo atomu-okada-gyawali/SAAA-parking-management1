@@ -14,12 +14,12 @@ box=Frame(bg="white")
 box.place(width=780,height=800)
 
 #importing image and logo on our window
-img=PhotoImage(file="SAAA-parking-management1\\add_window\\taxi-add-image.png")
+img=PhotoImage(file="SAAA-parking-management1\\resources\\image_addpage.png")
 label=tk.Label(window,image=img,bg="white",width=700,height=700)
 # PhotoImage(file="taxi-add-image.png")
 label.place(x=30,y=80)
 
-logo=PhotoImage(file="SAAA-parking-management1\\add_window\\saalogo.png")
+logo=PhotoImage(file="SAAA-parking-management1\\resources\\logo_addpage.png")
 lbl=tk.Label(window,image=logo,bg="white",width=246,height=62)
 lbl.place(x=50,y=26)
 

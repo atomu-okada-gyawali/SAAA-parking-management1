@@ -12,14 +12,14 @@ win.geometry("1624x962")
 update=Frame(win,bg="white",width=812,height=962)
 update.place(x=0,y=0)
 
-img = Image.open(r"C:\Users\DELL\OneDrive\Desktop\project\SAAA.jpg")
+img = Image.open("SAAA-parking-management1\\resources\\logo_updatepage.jpg")
 backg = ImageTk.PhotoImage(img)
 
 photoLabel = Label(win, image=backg,bg="white")
 photoLabel.place(x=36, y=33)
 
 
-img1 = Image.open(r"C:\Users\DELL\OneDrive\Desktop\project\teammates.jpg")
+img1 = Image.open("SAAA-parking-management1\\resources\\image_updatepage.jpg")
 backg1 = ImageTk.PhotoImage(img1)
 
 photoLabel1 = Label(win, image=backg1,bg="white")

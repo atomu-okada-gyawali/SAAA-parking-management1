@@ -10,9 +10,9 @@ root.title("First Page")
 root.geometry("1625x950")
 root.config (bg = "white")
 
-def login():
+def goto_registration():
     root.destroy()
-    import reg1
+    import registrationpage
 
 
 
@@ -25,7 +25,7 @@ def open_image(file_path):
     image = Image.open(file_path)
     return ImageTk.PhotoImage(image)
 
-image_path = (r"C:\Users\user\Downloads\computer.png")
+image_path = ("SAAA-parking-management1\\resources\\image_firstpage.png")
 
 image = open_image(image_path)
 label = tk.Label(root, image=image,bg = "white", width = 600, height = 650)
@@ -33,7 +33,7 @@ label.pack()
 label.place(anchor = CENTER, x =790, y = 400 )
 
 
-image_path = (r"C:\Users\user\Downloads\sasa.png")
+image_path = ("SAAA-parking-management1\\resources\\logo_firstpage.png")
 
 img2 = open_image(image_path)
 label2 = tk.Label(root,image = img2,bg = "white",width = 246, height = 61.38 )
@@ -56,7 +56,7 @@ lbl2.place(x =692, y = 85 )
 log_btn = Button(root, text = "          LOGIN          ", fg = "black", bg = "#FFC125", font = ("Georgia", 14))
 log_btn.place(x =700, y = 660 )
 
-signup_btn = Button(root, text = "         SIGNUP         ", bg = "#FFC125", fg = "black", font = ("Georgia",14),command = login)
+signup_btn = Button(root, text = "         SIGNUP         ", bg = "#FFC125", fg = "black", font = ("Georgia",14),command = goto_registration)
 signup_btn.place(x = 700, y=740)
 
 

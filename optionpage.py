@@ -23,7 +23,7 @@ def open_image(file_path):
     image = Image.open(file_path)
     return ImageTk.PhotoImage(image)
 
-image_path = (r"C:\Users\user\Downloads\logo.png")
+image_path = ("SAAA-parking-management1\\resources\\logo_optionpage.png")
 
 img = open_image(image_path)
 label1 = tk.Label(b, image = img, width = 328, height = 246, bg = "#FECE2F")

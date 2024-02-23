@@ -61,7 +61,7 @@ sidebarFrame.pack(side = LEFT,fill = Y)
 sidebarFrame.pack_propagate(False)
 
 #Creates logo in the sidebar
-img = ImageTk.PhotoImage(Image.open(r"main_page\logo.png"))
+img = ImageTk.PhotoImage(Image.open("SAAA-parking-management1\\resources\\logo_mainpage.png"))
 logo = Label(sidebarFrame, image = img)
 logo.pack()
 

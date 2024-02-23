@@ -15,14 +15,14 @@ def open_image(file_path):
     image = Image.open(file_path)
     return ImageTk.PhotoImage(image)
 
-image_path = (r"C:\Users\user\Downloads\taxiimage.png")
+image_path = ("SAAA-parking-management1\\resources\\image_registrationpage.png")
 
 img = open_image(image_path)
 label = tk.Label(win, image=img, bg = "white", width = 692, height = 766)
 label.pack( side = LEFT)
 
 
-image_path = (r"C:\Users\user\Downloads\saaa.png")
+image_path = ("SAAA-parking-management1\\resources\\logo_optionpage.png")
 img2 = open_image(image_path)
 label2 = tk.Label(win, image=img2, bg = "white",width = 246, height = 61.38)
 label2.pack()   

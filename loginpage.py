@@ -12,7 +12,7 @@ win.geometry("1624x962")
 # win.minsize(width=500,height=300)
 
 
-img = Image.open(r"C:\Users\DELL\OneDrive\Desktop\project 2/icon.jpg")
+img = Image.open("SAAA-parking-management1\\resources\\icon_loginpage.jpg")
 topg = ImageTk.PhotoImage(img)
 
 photoLabel = Label(win, image=topg,bg="white",height="500",width="700")
@@ -20,7 +20,7 @@ photoLabel.place(x=20, y=50)
 
 
 # BACKGROUND IMAGE
-img = Image.open(r"C:\Users\DELL\OneDrive\Desktop\project 2/computer_img.jpg")
+img = Image.open("SAAA-parking-management1\\resources\\image_loginpage.jpg")
 backg = ImageTk.PhotoImage(img)
 
 photoLabel = Label(win, image=backg,bg="white",height="500",width="700")
