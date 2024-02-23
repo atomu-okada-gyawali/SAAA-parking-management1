@@ -14,7 +14,9 @@ def goto_registration():
     root.destroy()
     import registrationpage
 
-
+def goto_login():
+    root.destroy()
+    import loginpage
 
 
 frame1 = Frame(root, height = 497,bg = "white", width = 700)
@@ -53,7 +55,7 @@ lbl1.place(x =600, y = 30 )
 lbl2 = Label(root, text = "make your own space", bg = "white", fg = "black", font = ("Georgia", 12))
 lbl2.place(x =692, y = 85 )
 
-log_btn = Button(root, text = "          LOGIN          ", fg = "black", bg = "#FFC125", font = ("Georgia", 14))
+log_btn = Button(root, text = "          LOGIN          ", fg = "black", bg = "#FFC125", font = ("Georgia", 14), command = goto_login)
 log_btn.place(x =700, y = 660 )
 
 signup_btn = Button(root, text = "         SIGNUP         ", bg = "#FFC125", fg = "black", font = ("Georgia",14),command = goto_registration)
