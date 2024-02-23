@@ -71,4 +71,7 @@ a4.place(x = 600, y = 530)
 e4 = Entry(b, width = 20)
 e4.place(x = 920, y = 532)
 
+submitButton = Button(b, text = 'Submit', font = ('Georgia', 16), bg = "#FECE2F")
+submitButton.place(x = 970, y = 700)
+
 b.mainloop()
