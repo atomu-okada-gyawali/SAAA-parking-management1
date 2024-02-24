@@ -1,9 +1,9 @@
 from tkinter import *
 import sqlite3
 from PIL import ImageTk, Image
-import ctypes
 from time import strftime
-ctypes.windll.shcore.SetProcessDpiAwareness(1)
+# import ctypes
+# ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
 root = Tk()
 root.geometry('1635x962')
@@ -14,22 +14,38 @@ def time():
     clock.config(text = string)
     clock.after(1000, time)
 
+def goto_addpage():
+        root.destroy()
+        import add_page
 
+def goto_updatepage():
+        root.destroy()
+        import updatepage
+        
 def select(slot):
     '''This function is event handler for all slot buttons in their respective parkingArea in parkingFrame, which does the following:
     1.highlights the text of the button with light blue color when selected and turns the color of the text into black when deselected
     2. activates the buttons in the buttonFrame when one of the slot buttons is clicked and disables the buttons when slot button is deselected'''
-    if slot.cget('fg') == 'lightBlue':
-        slot.config(fg = 'SystemButtonText')
-        for button in buttonFrame.winfo_children():
-            button.config(bg = 'white',state = DISABLED)
-    else:
-        for parkingArea in parkingFrame.winfo_children():
-            for oneSlot in parkingArea.winfo_children():
-                oneSlot.config(fg= 'SystemButtonText')
-        for button in buttonFrame.winfo_children():
-            button.config(state = ACTIVE,bg = 'yellow')
-            slot.config(fg = 'lightBlue')
+    with open('currentSlot.txt', 'r') as currentSlot:
+                slotInFile = currentSlot.read(2)
+
+    if slotInFile != slot.cget('text'):
+        with open('currentSlot.txt', 'w') as currentSlot:
+                currentSlot.write(slot.cget('text'))
+    elif slotInFile == slot.cget('text'):
+        with open('currentSlot.txt', 'w') as currentSlot:
+                currentSlot.write('')
+#     if slot.cget('fg') == 'lightBlue':
+#         slot.config(fg = 'SystemButtonText')
+#         for button in buttonFrame.winfo_children():
+#             button.config(bg = 'white',state = DISABLED)
+#     else:
+#         for parkingArea in parkingFrame.winfo_children():
+#             for oneSlot in parkingArea.winfo_children():
+#                 oneSlot.config(fg= 'SystemButtonText')
+#         for button in buttonFrame.winfo_children():
+#             button.config(state = ACTIVE,bg = 'yellow')
+#             slot.config(fg = 'lightBlue')
 
 conn = sqlite3.connect('parkingManagement.db')
 cursor = conn.cursor()
@@ -41,6 +57,7 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS Customer(
                Check_in TIMESTAMP,
                Check_out TIMESTAMP,
                PhoneNumber INTEGER,
+               Duration INTEGER,
                Overtime_duration INTEGER
 )''')
 
@@ -183,7 +200,7 @@ rightFrame.pack_propagate(False)
 
 #Creates frame at the top in rightFrame, which contains the clock and the available slots
 csFrame = Frame(rightFrame, width = 292, height = 200 )
-csFrame.pack(pady = 30)
+csFrame.pack()
 csFrame.pack_propagate(False)
 
 #Clock
@@ -204,7 +221,7 @@ space.pack()
 
 # 2nd Frame in the rightFrame, which displays the attributes of the currently used selected slots--------------------------------------------------------------------------------------------------------------------------------
 infoFrame = Frame(rightFrame, width = 292, height = 253)
-infoFrame.pack(pady = 30)
+infoFrame.pack()
 infoFrame.pack_propagate(False)
 
 info1Frame = Frame(infoFrame, bg = 'gold')
@@ -258,18 +275,18 @@ coValue.grid(row = 5, column = 1)
 
 #3rd Frame of the righFrame, which contains the buttons for CRUD and billing of the selected slot
 buttonFrame = Frame(rightFrame, width = 292, height = 417 )
-buttonFrame.pack(pady = 30)
+buttonFrame.pack()
 buttonFrame.pack_propagate(False)
 
-addButton = Button(buttonFrame, state = DISABLED, text = 'Add Vehicle', width = 20, height = 2, bg = 'white')
+addButton = Button(buttonFrame, text = 'Add Vehicle', width = 20, height = 2, bg = 'white',command = goto_addpage)
 addButton.pack(pady = 15)
 
-updateButton = Button(buttonFrame, state = DISABLED, text = 'Update Slot', width = 20, height = 2, bg = 'white')
+updateButton = Button(buttonFrame, text = 'Update Slot', width = 20, height = 2, bg = 'white', command = goto_updatepage)
 updateButton.pack(pady = 15)
 
-deleteButton = Button(buttonFrame, state = DISABLED, text = 'Delete Vehicle', width = 20, height = 2, bg = 'white')
+deleteButton = Button(buttonFrame, text = 'Delete Vehicle', width = 20, height = 2, bg = 'white')
 deleteButton.pack(pady = 15)
 
-billButton = Button(buttonFrame, state = DISABLED, text = 'Bill', width = 20, height = 2, bg = 'white')
+billButton = Button(buttonFrame, text = 'Bill', width = 20, height = 2, bg = 'white')
 billButton.pack(pady = 15)
 root.mainloop()
