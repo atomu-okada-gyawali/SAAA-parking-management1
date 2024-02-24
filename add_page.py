@@ -1,8 +1,22 @@
 from tkinter import*
 import tkinter as tk
 import ast
-
 from PIL import Image,ImageTk
+import sqlite3
+import datetime
+from datetime import timedelta
+
+def adding_record():
+    with open('currentSlot.txt', 'r') as slotFile:
+        parking_slot = slotFile.read()
+    conn = sqlite3.connect('parkingManagement.db')
+    cursor = conn.cursor()
+    check_in = datetime.datetime.now()
+    check_out = check_in + datetime.timedelta(minutes= Duration_Entry)
+    conn.execute('''INSERT INTO Customer(CustomerName,PhoneNumber,Duration, Check_in, Check_out, ParkingSlot) VALUES(?,?,?,?,?,?)''', username_Entry.get(), Phonenum_Entry.get(),Duration_Entry.get(),check_in,check_out,parking_slot)
+    conn.execute('''INSERT INTO Vehicle(VehicleNumber,VehicleName,VehicleType) VALUES(?,?,?)''', Vehiclenum_Entry.get(), Vehiclename_Entry.get(),Vehicletype_Entry.get())
+    conn.commit()
+    conn.close()
 window=Tk()
 window.title("add window")
 #setting up window size and background
@@ -66,11 +80,9 @@ Duration_label.place(x=862,y=619)
 Duration_Entry=Entry(window,width=50)
 Duration_Entry.place(x=1120,y=613,height=41)
 
-
-
 #creating a submit button to store all the data entry
 
-btn=Button(window,text="SUBMIT",bg="#FECE2F",fg="black",font=("Georgia",24))
+btn=Button(window,text="SUBMIT",bg="#FECE2F",fg="black",font=("Georgia",24), command = adding_record)
 btn.place(x=1000,y=715,width=141,height=50)
 
 window.mainloop()
