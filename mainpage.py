@@ -5,6 +5,8 @@ from time import strftime
 # import ctypes
 # ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
+with open('currentSlot.txt','w') as currentSlot:
+        currentSlot.write('')
 root = Tk()
 root.geometry('1635x962')
 root.title('Dashboard')
@@ -23,11 +25,8 @@ def goto_updatepage():
         import updatepage
         
 def select(slot):
-    '''This function is event handler for all slot buttons in their respective parkingArea in parkingFrame, which does the following:
-    1.highlights the text of the button with light blue color when selected and turns the color of the text into black when deselected
-    2. activates the buttons in the buttonFrame when one of the slot buttons is clicked and disables the buttons when slot button is deselected'''
     with open('currentSlot.txt', 'r') as currentSlot:
-                slotInFile = currentSlot.read(2)
+        slotInFile = currentSlot.read(2)
 
     if slotInFile != slot.cget('text'):
         with open('currentSlot.txt', 'w') as currentSlot:
@@ -54,8 +53,8 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS Customer(
                CustomerID INTEGER PRIMARY KEY AUTOINCREMENT,
                CustomerName TEXT,
                ParkingSlot TEXT,
-               Check_in TIMESTAMP,
-               Check_out TIMESTAMP,
+               Check_in TEXT,
+               Check_out TEXT,
                PhoneNumber INTEGER,
                Duration INTEGER,
                Overtime_duration INTEGER
@@ -68,6 +67,41 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS Vehicle(
                VehicleName TEXT,
                VehicleType TEXT,
                FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+)''')
+
+cursor.execute('''CREATE TABLE IF NOT EXISTS ParkingSlot(
+              ParkingSlotName TEXT,
+              SlotType TEXT,
+              CustomerID INTEGER,
+              Rate INTEGER,
+              OvertimeRate INTEGER,
+              FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+)''')
+
+cursor.execute('''CREATE TABLE IF NOT EXISTS Bill(
+               BillID INTEGER PRIMARY KEY AUTOINCREMENT,
+               CustomerID INTEGER,
+               Amount INTEGER,
+               UserID INTEGER,
+               FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+)''')
+cursor.execute('''CREATE TABLE IF NOT EXISTS Bill_User(
+               BillID INTEGER,
+               UserID INTEGER,
+               FOREIGN KEY (BillID) REFERENCES Bill(BillID),
+               FOREIGN KEY (UserID) REFERENCES User(UserID)
+)''')
+cursor.execute('''CREATE TABLE IF NOT EXISTS User(
+               UserID INTEGER PRIMARY KEY AUTOINCREMENT,
+               UserFName TEXT,
+               UserLName TEXT,
+               UserUName TEXT,
+               UserEmail TEXT,
+               UserPassword TEXT,
+               UserGender TEXT,
+               UserAge TEXT,
+               UserPosition TEXT,
+               UserPhoneNumber TEXT
 )''')
 conn.commit()
 conn.close()
