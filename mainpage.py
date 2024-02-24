@@ -14,7 +14,10 @@ def time():
     clock.config(text = string)
     clock.after(1000, time)
 
-
+def goto_addpage():
+        root.destroy()
+        import add_page
+        
 def select(slot):
     '''This function is event handler for all slot buttons in their respective parkingArea in parkingFrame, which does the following:
     1.highlights the text of the button with light blue color when selected and turns the color of the text into black when deselected
@@ -261,7 +264,7 @@ buttonFrame = Frame(rightFrame, width = 292, height = 417 )
 buttonFrame.pack(pady = 30)
 buttonFrame.pack_propagate(False)
 
-addButton = Button(buttonFrame, state = DISABLED, text = 'Add Vehicle', width = 20, height = 2, bg = 'white')
+addButton = Button(buttonFrame, state = DISABLED, text = 'Add Vehicle', width = 20, height = 2, bg = 'white',command = goto_addpage)
 addButton.pack(pady = 15)
 
 updateButton = Button(buttonFrame, state = DISABLED, text = 'Update Slot', width = 20, height = 2, bg = 'white')
