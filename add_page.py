@@ -13,15 +13,13 @@ def adding_record():
     cursor = conn.cursor()
     check_inDatetime = datetime.datetime.now()
     check_outDatetime = check_inDatetime + datetime.timedelta(minutes= int(Duration_Entry.get()))
-    check_in = f"{check_inDatetime.hour}: {check_inDatetime.now().minute}"
-    check_out = f"{check_outDatetime.hour}: {check_outDatetime.now().minute}"
-    conn.execute('''
+    check_in = f"{check_inDatetime.hour}: {check_inDatetime.minute}"
+    check_out = f"{check_outDatetime.hour}: {check_outDatetime.minute}"
+    cursor.execute('''
                  INSERT INTO Customer(
-                 CustomerName,PhoneNumber,Duration, Check_in, Check_out, ParkingSlot) VALUES(?,?,?,?,?,?)''', [username_Entry.get(), Phonenum_Entry.get(),Duration_Entry.get(),check_in,check_out,parking_slot]
+                 CustomerName,PhoneNumber,Duration, Check_in, Check_out,VehicleNumber,VehicleName,VehicleType,ParkingSlotName) VALUES(?,?,?,?,?,?,?,?,?)''', [username_Entry.get(), Phonenum_Entry.get(),Duration_Entry.get(),check_in,check_out,Vehiclenum_Entry.get(), Vehiclename_Entry.get(),Vehicletype_Entry.get(),parking_slot]
                  )
-    conn.execute('''
-                 INSERT INTO Vehicle(VehicleNumber,VehicleName,VehicleType) VALUES(?,?,?)''', [Vehiclenum_Entry.get(), Vehiclename_Entry.get(),Vehicletype_Entry.get()]
-                 )
+
     conn.commit()
     conn.close()
 

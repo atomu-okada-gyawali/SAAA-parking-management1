@@ -5,78 +5,131 @@ from time import strftime
 # import ctypes
 # ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
+
+#initiating currentSlot.txt which stores the recently clicked slot
 with open('currentSlot.txt','w') as currentSlot:
         currentSlot.write('')
+
+
 root = Tk()
 root.geometry('1635x962')
 root.title('Dashboard')
+
 def time():
     '''This function is event handler for clockLabel in csFrame of rightFrame, which updates the label as the time according to the system clock in real time'''
     string = strftime('%H: %M: %S %p')
     clock.config(text = string)
     clock.after(1000, time)
 
+
 def goto_addpage():
+        '''go to add page'''
         root.destroy()
         import add_page
 
 def goto_updatepage():
+        '''go to update page'''
         root.destroy()
         import updatepage
-        
+
+
+# def info_retreive():
+#         conn = sqlite3.connect('parkingManagement.db')
+#         c = conn.cursor()
+#         c.execute(f'SELECT * FROM employee WHERE ParkingSlotName = {slotInFile}')
+#         current_record = c.fetchone()
+#         print(current_record)
+#         conn.close()
+
 def select(slot):
-    with open('currentSlot.txt', 'r') as currentSlot:
-        slotInFile = currentSlot.read(2)
+        '''this function writes the name of the currently clicked slot button in the currentSlot.txt, but writes empty string when the slotButton is clicked twice indicating the deselection'''
+        with open('currentSlot.txt', 'r') as currentSlot:
+                slotInFile = currentSlot.read(2)
 
-    if slotInFile != slot.cget('text'):
-        with open('currentSlot.txt', 'w') as currentSlot:
-                currentSlot.write(slot.cget('text'))
-    elif slotInFile == slot.cget('text'):
-        with open('currentSlot.txt', 'w') as currentSlot:
-                currentSlot.write('')
-#     if slot.cget('fg') == 'lightBlue':
-#         slot.config(fg = 'SystemButtonText')
-#         for button in buttonFrame.winfo_children():
-#             button.config(bg = 'white',state = DISABLED)
-#     else:
-#         for parkingArea in parkingFrame.winfo_children():
-#             for oneSlot in parkingArea.winfo_children():
-#                 oneSlot.config(fg= 'SystemButtonText')
-#         for button in buttonFrame.winfo_children():
-#             button.config(state = ACTIVE,bg = 'yellow')
-#             slot.config(fg = 'lightBlue')
+        if slotInFile != slot.cget('text'):
+                with open('currentSlot.txt', 'w') as currentSlot:
+                        currentSlot.write(slot.cget('text'))
+                conn = sqlite3.connect('parkingManagement.db')
+                c = conn.cursor()
+                with open('currentSlot.txt', 'r') as currentSlot:
+                        slotInFile = currentSlot.read()
+                try:
+                        c.execute('SELECT * FROM Customer WHERE ParkingSlotName = (?)',(slotInFile,))
+                        current_record = c.fetchone()
+                        nameValue.config(text = current_record[1])
+                        ciValue.config(text = current_record[2])
+                        coValue.config(text = current_record[3])
+                        phoneValue.config(text=current_record[4])
+                        vNoValue.config(text=current_record[7])
+                        vNameValue.config(text = current_record[8])
+                        slotValue.config(text = current_record[10])
+                        conn.close()
+                except TypeError:
+                        pass
 
+                addButton.config(state = NORMAL, bg = '#FECE2F')
+                updateButton.config(state = NORMAL, bg = '#FECE2F')
+                deleteButton.config(state = NORMAL, bg = '#FECE2F')
+                billButton.config(state = NORMAL, bg = '#FECE2F')
+        elif slotInFile == slot.cget('text'):
+                with open('currentSlot.txt', 'w') as currentSlot:
+                        currentSlot.write('')
+                nameValue.config(text = "")
+                ciValue.config(text = "")
+                coValue.config(text = "")
+                phoneValue.config(text="")
+                vNoValue.config(text="")
+                vNameValue.config(text = "")
+                slotValue.config(text = "")
+                addButton.config(state = DISABLED, bg = 'white')
+                updateButton.config(state = DISABLED, bg = 'white')
+                deleteButton.config(state = DISABLED, bg = 'white')
+                billButton.config(state = DISABLED, bg = 'white')
+
+#initiating database accoriding to the er diagram
 conn = sqlite3.connect('parkingManagement.db')
 cursor = conn.cursor()
 
 cursor.execute('''CREATE TABLE IF NOT EXISTS Customer(
                CustomerID INTEGER PRIMARY KEY AUTOINCREMENT,
                CustomerName TEXT,
-               ParkingSlot TEXT,
                Check_in TEXT,
                Check_out TEXT,
                PhoneNumber INTEGER,
                Duration INTEGER,
-               Overtime_duration INTEGER
-)''')
-
-cursor.execute('''CREATE TABLE IF NOT EXISTS Vehicle(
-               VehicleID INTEGER PRIMARY KEY AUTOINCREMENT,
-               CustomerID INTEGER,
+               Overtime_duration INTEGER,
                VehicleNumber INTEGER,
                VehicleName TEXT,
                VehicleType TEXT,
-               FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
+               ParkingSlotName TEXT
 )''')
 
-cursor.execute('''CREATE TABLE IF NOT EXISTS ParkingSlot(
-              ParkingSlotName TEXT,
-              SlotType TEXT,
-              CustomerID INTEGER,
-              Rate INTEGER,
-              OvertimeRate INTEGER,
-              FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
-)''')
+
+'''creating nested list of the records of parking slots with their respective names,slottypes,Rate,OvertimeRate.
+Foreg:
+[['A1', 'four-wheeler'],
+ ['A2', 'four-wheeler'],
+ ['A3', 'four-wheeler'],
+ ['A4', 'four-wheeler'],
+ ['A5', 'four-wheeler'],
+ ['A6', 'four-wheeler'],
+ ['B1', 'four-wheeler'],
+ ['B2', 'four-wheeler'],
+ ['B3', 'four-wheeler'],
+ ................................
+[]'''
+slotList = []
+
+for firstLetter in ('A','B','C','D'):
+        if firstLetter != 'D':
+                for secondNumber in range(1, 7):
+                        slotList.append([firstLetter+ str(secondNumber), 'four-wheeler'])
+        else:
+                for secondNumber in range(1,11):
+                        slotList.append([firstLetter+ str(secondNumber), 'two-wheeler'])
+                
+
+
 
 cursor.execute('''CREATE TABLE IF NOT EXISTS Bill(
                BillID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -107,7 +160,7 @@ conn.commit()
 conn.close()
 
 #Creates sidebar
-sidebarFrame = Frame(root, width = 327, height = 962, bg = '#FBBC05')
+sidebarFrame = Frame(root, width = 327, height = 962, bg = '#FECE2F')
 sidebarFrame.pack(side = LEFT,fill = Y)
 sidebarFrame.pack_propagate(False)
 
@@ -117,42 +170,42 @@ logo = Label(sidebarFrame, image = img)
 logo.pack()
 
 #Frame for Buttons in the sidebar
-sideButtonFrame = Frame(sidebarFrame,width = 327, height = 500, bg = 'brown')
+sideButtonFrame = Frame(sidebarFrame,width = 327, height = 500, bg = '#FECE2F')
 sideButtonFrame.pack()
 sideButtonFrame.pack_propagate(False)
 
 #Buttons for Sidebar----------------------------------------------
-parkingButton = Button(sideButtonFrame, text = 'Dashboard', font = ('Georgia bold', 16), height = 2)
+parkingButton = Button(sideButtonFrame, text = 'Dashboard', font = ('Georgia bold', 16), height = 2, relief = FLAT, bg = '#FECE2F')
 parkingButton.pack(fill = X)
 
-optionsButton = Button(sideButtonFrame, text = 'Options', font = ('Georgia bold', 16), height = 2)
+optionsButton = Button(sideButtonFrame, text = 'Options', font = ('Georgia bold', 16), height = 2, relief = FLAT, bg = '#FECE2F')
 optionsButton.pack(fill = X)
 
-currentRecordsButton = Button(sideButtonFrame, text = 'Current Records', font = ('Georgia bold', 16), height = 2)
-currentRecordsButton.pack(fill = X)
+# currentRecordsButton = Button(sideButtonFrame, text = 'Current Records', font = ('Georgia bold', 16), height = 2)
+# currentRecordsButton.pack(fill = X)
 
-statisticsButton = Button(sideButtonFrame, text = 'Statistics', font = ('Georgia bold', 16), height = 2)
-statisticsButton.pack(fill = X)
+# statisticsButton = Button(sideButtonFrame, text = 'Statistics', font = ('Georgia bold', 16), height = 2)
+# statisticsButton.pack(fill = X)
 
-logoutButton = Button(sideButtonFrame, text = 'Logout', font = ('Georgia bold', 16), height = 2)
+logoutButton = Button(sideButtonFrame, text = 'Logout', font = ('Georgia bold', 16), height = 2, relief = FLAT, bg = '#FECE2F')
 logoutButton.pack(fill = X)
 #----------------------------------------------------------------
 
 #Creates middle Frame that contains parking areas
-middleFrame = Frame(root, width = 986, height = 962, bg = 'blue')
+middleFrame = Frame(root, width = 986, height = 962, bg = 'white')
 middleFrame.pack(side = LEFT)
 middleFrame.pack_propagate(False)
 
 #Heading for parking area
-paText = Label(middleFrame, text = 'PARKING AREA', font = ('Georgia bold',40))
+paText = Label(middleFrame, text = 'PARKING AREA', bg = 'white', font = ('Georgia bold',40))
 paText.pack(pady = 20)
 
 #Creates parking Frame (contains 4 parking Areas -D) inside middle frame
-parkingFrame = Frame(middleFrame, width = 948, height = 792, bg = 'brown')
+parkingFrame = Frame(middleFrame, width = 948, height = 792, bg = 'white',bd=6)
 parkingFrame.pack()
 
 #parkingAreaA Frame
-parkingAreaA  = Frame(parkingFrame, bg = 'lime', padx= 50, pady = 50)
+parkingAreaA  = Frame(parkingFrame, bg = 'white', padx= 50, pady = 50)
 parkingAreaA.place(x = 0, y = 0)
 
 slotA1 = Button(parkingAreaA, text = 'A1', width = 13, height = 3, command = lambda: select(slotA1))
@@ -169,7 +222,7 @@ slotA6 = Button(parkingAreaA, text = 'A6', width = 13, height = 3, command = lam
 slotA6.grid(row = 2, column = 1, padx = 10, pady = 5)
 
 #parking Area B frame
-parkingAreaB  = Frame(parkingFrame, bg = 'lime', padx= 50, pady = 50)
+parkingAreaB  = Frame(parkingFrame, bg = 'white', padx= 50, pady = 50)
 parkingAreaB.place( x = 580, y = 0)
 
 slotB1 = Button(parkingAreaB, text = 'B1', width = 13, height = 3, command = lambda: select(slotB1))
@@ -186,7 +239,7 @@ slotB6 = Button(parkingAreaB, text = 'B6', width = 13, height = 3, command = lam
 slotB6.grid(row = 2, column = 1, padx = 10, pady = 5)
 
 #parking Area C Frame
-parkingAreaC  = Frame(parkingFrame, bg = 'lime', padx= 50, pady = 50)
+parkingAreaC  = Frame(parkingFrame, bg = 'white', padx= 50, pady = 50)
 parkingAreaC.place(x = 0, y = 440)
 
 slotC1 = Button(parkingAreaC, text = 'C1', width = 13, height = 3, command = lambda: select(slotC1))
@@ -203,7 +256,7 @@ slotC6 = Button(parkingAreaC, text = 'C6', width = 13, height = 3, command = lam
 slotC6.grid(row = 2, column = 1, padx = 10, pady = 5)
 
 #parking Area D Frame (two-wheelers)
-parkingAreaD = Frame(parkingFrame, bg = 'lime', padx= 50, pady = 67)
+parkingAreaD = Frame(parkingFrame, bg = 'white', padx= 50, pady = 67)
 parkingAreaD.place(x = 509, y =440)
 
 slotD1 = Button(parkingAreaD, text = 'D1', width = 6, height = 4, command = lambda: select(slotD1))
@@ -228,7 +281,7 @@ slotD10 = Button(parkingAreaD, text = 'D10', width = 6, height = 4, command = la
 slotD10.grid(row = 1, column = 4, padx = 5, pady = 8)
 
 #Creates rightmost Frame
-rightFrame = Frame(root, width = 325, height = 962, bg = 'pink')
+rightFrame = Frame(root, width = 325, height = 962, bg = 'white')
 rightFrame.pack(side = LEFT, fill = BOTH)
 rightFrame.pack_propagate(False)
 
@@ -273,25 +326,25 @@ info2Frame.pack()
 nameLabel = Label(info2Frame, text = 'Name: ')
 nameLabel.grid(row = 0, column = 0)
 
-nameValue = Label(info2Frame, text = 'Sailesh Ranabhat')
+nameValue = Label(info2Frame, text = '')
 nameValue.grid(row = 0, column = 1)
 
 vNoLabel = Label(info2Frame, text = 'Vehicle No: ')
 vNoLabel.grid(row = 1, column = 0)
 
-vNoValue = Label(info2Frame, text = 'Province X AB 0123 X')
+vNoValue = Label(info2Frame, text = '')
 vNoValue.grid(row = 1, column = 1)
 
 vNameLabel = Label(info2Frame, text = 'Vehicle Name: ')
 vNameLabel.grid(row = 2, column = 0)
 
-vNameValue = Label(info2Frame, text = 'white, Maruti')
+vNameValue = Label(info2Frame, text = '')
 vNameValue.grid(row = 2, column = 1)
 
 phoneLabel = Label(info2Frame, text = 'Phone No.: ')
 phoneLabel.grid(row = 3, column = 0)
 
-phoneValue = Label(info2Frame, text = '981111111111')
+phoneValue = Label(info2Frame, text = '')
 phoneValue.grid(row = 3, column = 1)
 
 ciLabel = Label(info2Frame, text = 'Check-in: ')
@@ -312,15 +365,15 @@ buttonFrame = Frame(rightFrame, width = 292, height = 417 )
 buttonFrame.pack()
 buttonFrame.pack_propagate(False)
 
-addButton = Button(buttonFrame, text = 'Add Vehicle', width = 20, height = 2, bg = 'white',command = goto_addpage)
+addButton = Button(buttonFrame,state = DISABLED, text = 'Add Vehicle', width = 20, height = 2,command = goto_addpage)
 addButton.pack(pady = 15)
 
-updateButton = Button(buttonFrame, text = 'Update Slot', width = 20, height = 2, bg = 'white', command = goto_updatepage)
+updateButton = Button(buttonFrame,state = DISABLED, text = 'Update Slot', width = 20, height = 2, command = goto_updatepage)
 updateButton.pack(pady = 15)
 
-deleteButton = Button(buttonFrame, text = 'Delete Vehicle', width = 20, height = 2, bg = 'white')
+deleteButton = Button(buttonFrame,state = DISABLED, text = 'Delete Vehicle', width = 20, height = 2)
 deleteButton.pack(pady = 15)
 
-billButton = Button(buttonFrame, text = 'Bill', width = 20, height = 2, bg = 'white')
+billButton = Button(buttonFrame,state = DISABLED, text = 'Bill', width = 20, height = 2)
 billButton.pack(pady = 15)
 root.mainloop()
