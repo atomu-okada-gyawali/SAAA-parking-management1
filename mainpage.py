@@ -21,7 +21,11 @@ def time():
     clock.config(text = string)
     clock.after(1000, time)
 
-
+def goto_billpage():
+        '''go to add page'''
+        root.destroy()
+        import billpage
+        
 def goto_addpage():
         '''go to add page'''
         root.destroy()
@@ -374,6 +378,6 @@ updateButton.pack(pady = 15)
 deleteButton = Button(buttonFrame,state = DISABLED, text = 'Delete Vehicle', width = 20, height = 2)
 deleteButton.pack(pady = 15)
 
-billButton = Button(buttonFrame,state = DISABLED, text = 'Bill', width = 20, height = 2)
+billButton = Button(buttonFrame,state = DISABLED, text = 'Bill', width = 20, height = 2,command = goto_billpage)
 billButton.pack(pady = 15)
 root.mainloop()
