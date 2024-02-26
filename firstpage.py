@@ -36,7 +36,8 @@ def open_image(file_path):
     image = Image.open(file_path)
     return ImageTk.PhotoImage(image)
 
-image_path = ("SAAA-parking-management1\\resources\\image_firstpage.png") #here is the image path and also the image format should me mentioned in order for it to be imported successfully
+image_path = ("SAAA-parking-management1\\resources\\image_firstpage.png") #here is the image path and also the image format should me
+#mentioned in order for it to be imported successfully
 
 image = open_image(image_path)
 label = tk.Label(root, image=image,bg = "white", width = 600, height = 650)#background and geometry of image is changed according to the window 
