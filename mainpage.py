@@ -10,7 +10,6 @@ from time import strftime
 with open('currentSlot.txt','w') as currentSlot:
         currentSlot.write('')
 
-
 root = Tk()
 root.geometry('1635x962')
 root.title('Dashboard')
@@ -32,6 +31,10 @@ def goto_updatepage():
         root.destroy()
         import updatepage
 
+def goto_optionspage():
+        '''go to options page'''
+        root.destroy()
+        import optionpage
 
 # def info_retreive():
 #         conn = sqlite3.connect('parkingManagement.db')
@@ -64,13 +67,24 @@ def select(slot):
                         vNameValue.config(text = current_record[8])
                         slotValue.config(text = current_record[10])
                         conn.close()
-                except TypeError:
-                        pass
 
-                addButton.config(state = NORMAL, bg = '#FECE2F')
-                updateButton.config(state = NORMAL, bg = '#FECE2F')
-                deleteButton.config(state = NORMAL, bg = '#FECE2F')
-                billButton.config(state = NORMAL, bg = '#FECE2F')
+                        addButton.config(state = DISABLED, bg = '#FECE2F')
+                        updateButton.config(state = NORMAL, bg = '#FECE2F')
+                        deleteButton.config(state = NORMAL, bg = '#FECE2F')
+                        billButton.config(state = NORMAL, bg = '#FECE2F')
+                except TypeError:
+                        nameValue.config(text = "")
+                        ciValue.config(text = "")
+                        coValue.config(text = "")
+                        phoneValue.config(text="")
+                        vNoValue.config(text="")
+                        vNameValue.config(text = "")
+                        slotValue.config(text = slot.cget('text'))
+
+                        addButton.config(state = NORMAL, bg = '#FECE2F')
+                        updateButton.config(state = DISABLED, bg = '#FECE2F')
+                        deleteButton.config(state = DISABLED, bg = '#FECE2F')
+                        billButton.config(state = DISABLED, bg = '#FECE2F')
         elif slotInFile == slot.cget('text'):
                 with open('currentSlot.txt', 'w') as currentSlot:
                         currentSlot.write('')
@@ -92,16 +106,16 @@ cursor = conn.cursor()
 
 cursor.execute('''CREATE TABLE IF NOT EXISTS Customer(
                CustomerID INTEGER PRIMARY KEY AUTOINCREMENT,
-               CustomerName TEXT,
-               Check_in TEXT,
-               Check_out TEXT,
-               PhoneNumber INTEGER,
-               Duration INTEGER,
+               CustomerName TEXT NOT NULL,
+               Check_in TEXT NOT NULL,
+               Check_out TEXT NOT NULL,
+               PhoneNumber INTEGER NOT NULL,
+               Duration INTEGER NOT NULL,
                Overtime_duration INTEGER,
-               VehicleNumber INTEGER,
-               VehicleName TEXT,
-               VehicleType TEXT,
-               ParkingSlotName TEXT
+               VehicleNumber INTEGER NOT NULL,
+               VehicleName TEXT NOT NULL,
+               VehicleType TEXT NOT NULL,
+               ParkingSlotName TEXT NOT NULL
 )''')
 
 
@@ -159,6 +173,8 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS User(
 conn.commit()
 conn.close()
 
+
+
 #Creates sidebar
 sidebarFrame = Frame(root, width = 327, height = 962, bg = '#FECE2F')
 sidebarFrame.pack(side = LEFT,fill = Y)
@@ -178,7 +194,7 @@ sideButtonFrame.pack_propagate(False)
 parkingButton = Button(sideButtonFrame, text = 'Dashboard', font = ('Georgia bold', 16), height = 2, relief = FLAT, bg = '#FECE2F')
 parkingButton.pack(fill = X)
 
-optionsButton = Button(sideButtonFrame, text = 'Options', font = ('Georgia bold', 16), height = 2, relief = FLAT, bg = '#FECE2F')
+optionsButton = Button(sideButtonFrame, text = 'Options', font = ('Georgia bold', 16), height = 2, relief = FLAT, bg = '#FECE2F',command = goto_optionspage)
 optionsButton.pack(fill = X)
 
 # currentRecordsButton = Button(sideButtonFrame, text = 'Current Records', font = ('Georgia bold', 16), height = 2)
@@ -303,7 +319,23 @@ time()
 spaceLabel = Label(csFrame, text = 'Availabe Slots', font = ('Georgia', 10))
 spaceLabel.pack(pady = 20)
 
-space = Label(csFrame,text = '1', font = ('Georgia', 15))
+conn = sqlite3.connect('parkingManagement.db')
+cursor = conn.cursor()
+cursor.execute('''SELECT * FROM Customer ''')
+currentCustomerRecords = cursor.fetchall()
+currentSlotList = []
+for customerRecord in currentCustomerRecords:
+        currentSlotList.append(customerRecord[10])
+currentCustomerNO = len(currentCustomerRecords)
+conn.commit()
+conn.close()
+availableSlots = 28 - currentCustomerNO
+
+for subparkingFrame in parkingFrame.winfo_children():
+        for slot in subparkingFrame.winfo_children():
+                if slot.cget('text') in currentSlotList:
+                        slot.config(bg = 'lime')
+space = Label(csFrame,text = str(availableSlots), font = ('Georgia', 15))
 space.pack()
 
 # 2nd Frame in the rightFrame, which displays the attributes of the currently used selected slots--------------------------------------------------------------------------------------------------------------------------------
