@@ -28,21 +28,21 @@ photoLabel1.place(x=102, y=169)
 
 
 
-Vehicle_id=Label(win,text="VEHICLE ID",font=("Georgia",20),fg="Black",bg="Yellow").place(x=940,y=125)
+Vehicle_id=Label(win,text="VEHICLE ID",font=("Georgia",20),fg="Black",bg="#FECE2F").place(x=940,y=125)
 
-Vehicle_number_plate=Label(win,text="VEHICLE NUMBER PLATE",font=("Georgia",20),fg="Black",bg="Yellow").place(x=865,y=200)
+Vehicle_number_plate=Label(win,text="VEHICLE NUMBER PLATE",font=("Georgia",20),fg="Black",bg="#FECE2F").place(x=865,y=200)
 
-vehicle_type=Label(win,text="VEHICLE TYPE",font=("Georgia",20),fg="Black",bg="Yellow").place(x=927,y=275)
+vehicle_type=Label(win,text="VEHICLE TYPE",font=("Georgia",20),fg="Black",bg="#FECE2F").place(x=927,y=275)
 
-parking_slot_id=Label(win,text="PARKING SLOT ID",font=("Georgia",20),fg="Black",bg="Yellow").place(x=912,y=350)
+parking_slot_id=Label(win,text="PARKING SLOT ID",font=("Georgia",20),fg="Black",bg="#FECE2F").place(x=912,y=350)
 
-name=Label(win,text="NAME",font=("Georgia",20),fg="Black",bg="Yellow").place(x=971,y=425)
+name=Label(win,text="NAME",font=("Georgia",20),fg="Black",bg="#FECE2F").place(x=971,y=425)
 
-phone_number=Label(win,text="PHONE NUMBER",font=("Georgia",20),fg="Black",bg="Yellow").place(x=929,y=500)
+phone_number=Label(win,text="PHONE NUMBER",font=("Georgia",20),fg="Black",bg="#FECE2F").place(x=929,y=500)
 
-time=Label(win,text="TIME",font=("Georgia",20),fg="Black",bg="Yellow").place(x=975,y=575)
+time=Label(win,text="TIME",font=("Georgia",20),fg="Black",bg="#FECE2F").place(x=975,y=575)
 
-Sumbit=Button(win,text="SUMBIT",font=("Georgia",20),fg="Black",bg="Yellow").place(x=1250,y=700)
+Sumbit=Button(win,text="SUMBIT",font=("Georgia",20),fg="Black",bg="#FECE2F").place(x=1250,y=700)
 
 
 Vehicle_id=Entry(win,text="VEHICLE ID",width="40").place(x=1240,y=125)

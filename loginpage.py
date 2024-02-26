@@ -56,6 +56,9 @@ heading=Label(title_frame,text="Login",bg="white",font=("Georgia",30,"bold")).pl
 username=Label(win,text="Username",bg="white",font=("Open Sans",20)).place(x=250,y=400)
 Password=Label(win,text="Password",bg="white",font=("Open Sanas",20)).place(x=250,y=500)
 etn_username=Entry(win,text="Username",width="30").place(x=250,y=440)
-button_login=Button(win,text="Login",fg="black",bg="yellow",width="12",height="2",font=(30)).place(x=450,y=700)
+button_login=Button(win,text="Login",fg="black",bg="#FECE2F",width="12",height="1",font=(30)).place(x=450,y=680)
+exit=Button(win,text="Exit",fg="white",bg="black",width="12",height="1",font=(30)).place(x=450,y=730)
+
+
 
 win.mainloop()

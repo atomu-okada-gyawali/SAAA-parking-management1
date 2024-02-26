@@ -5,7 +5,8 @@ from time import strftime
 # import ctypes
 # ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
-
+with open('parkingRate.txt','w') as rate:
+        rate.write('')
 #initiating currentSlot.txt which stores the recently clicked slot
 with open('currentSlot.txt','w') as currentSlot:
         currentSlot.write('')
@@ -70,6 +71,7 @@ def select(slot):
                         vNoValue.config(text=current_record[7])
                         vNameValue.config(text = current_record[8])
                         slotValue.config(text = current_record[10])
+                        print(current_record)
                         conn.close()
 
                         addButton.config(state = DISABLED, bg = '#FECE2F')
