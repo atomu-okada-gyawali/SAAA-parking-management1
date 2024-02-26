@@ -5,20 +5,25 @@ from PIL import Image,ImageTk
 import sqlite3
 import datetime
 from datetime import timedelta
+from tkinter import messagebox # for pop up message box 
+
 
 def adding_record():
     with open('currentSlot.txt', 'r') as slotFile:
         parking_slot = slotFile.read()
-    conn = sqlite3.connect('parkingManagement.db')
-    cursor = conn.cursor()
-    check_inDatetime = datetime.datetime.now()
-    check_outDatetime = check_inDatetime + datetime.timedelta(minutes= int(Duration_Entry.get()))
-    check_in = f"{check_inDatetime.hour}: {check_inDatetime.minute}"
-    check_out = f"{check_outDatetime.hour}: {check_outDatetime.minute}"
-    cursor.execute('''
-                 INSERT INTO Customer(
-                 CustomerName,PhoneNumber,Duration, Check_in, Check_out,VehicleNumber,VehicleName,VehicleType,ParkingSlotName) VALUES(?,?,?,?,?,?,?,?,?)''', [username_Entry.get(), Phonenum_Entry.get(),Duration_Entry.get(),check_in,check_out,Vehiclenum_Entry.get(), Vehiclename_Entry.get(),Vehicletype_Entry.get(),parking_slot]
-                 )
+    if False in map(lambda entry:bool(entry),[username_Entry.get(),Phonenum_Entry.get(),Vehiclenum_Entry.get(),Vehiclename_Entry.get(),Duration_Entry.get()]):
+        messagebox.showinfo("Warning!","The entry box is not filled")
+    else:
+        conn = sqlite3.connect('parkingManagement.db')
+        cursor = conn.cursor()
+        check_inDatetime = datetime.datetime.now()
+        check_outDatetime = check_inDatetime + datetime.timedelta(minutes= int(Duration_Entry.get()))
+        check_in = f"{check_inDatetime.hour}: {check_inDatetime.minute}"
+        check_out = f"{check_outDatetime.hour}: {check_outDatetime.minute}"
+        cursor.execute('''
+                    INSERT INTO Customer(
+                    CustomerName,PhoneNumber,Duration, Check_in, Check_out,VehicleNumber,VehicleName,VehicleType,ParkingSlotName) VALUES(?,?,?,?,?,?,?,?,?)''', [username_Entry.get(), Phonenum_Entry.get(),Duration_Entry.get(),check_in,check_out,Vehiclenum_Entry.get(), Vehiclename_Entry.get(),parking_slot]
+                    )
 
     conn.commit()
     conn.close()
@@ -54,31 +59,26 @@ username_Entry.place(x=1120,y=160,height=41)
 
 
 Phonenum_label=Label(text="Phone Number  :",bg="#FECE2F",fg="black",font=("Georgia",20))
-Phonenum_label.place(x=830,y=253)
+Phonenum_label.place(x=830,y=267)
 
 Phonenum_Entry=Entry(window,width=50)
-Phonenum_Entry.place(x=1120,y=250,height=41)
+Phonenum_Entry.place(x=1120,y=267,height=41)
 
 
 Vehiclenum_label=Label(text="Vehicle Number Plate  :",bg="#FECE2F",fg="black",font=("Georgia",20))
-Vehiclenum_label.place(x=795,y=349)
+Vehiclenum_label.place(x=795,y=390)
 
 Vehiclenum_Entry=Entry(window,width=50)
-Vehiclenum_Entry.place(x=1120,y=342,height=41)
+Vehiclenum_Entry.place(x=1120,y=390,height=41)
 
 
-Vehicletype_label=Label(text="Vehicle Type  :",bg="#FECE2F",fg="black",font=("Georgia",20))
-Vehicletype_label.place(x=840,y=434)
-
-Vehicletype_Entry=Entry(window,width=50)
-Vehicletype_Entry.place(x=1120,y=432,height=41)
 
 
 Vehiclename_label=Label(text="Vehicle Name  :",bg="#FECE2F",fg="black",font=("Georgia",20))
-Vehiclename_label.place(x=830,y=527)
+Vehiclename_label.place(x=830,y=500)
 
 Vehiclename_Entry=Entry(window,width=50)
-Vehiclename_Entry.place(x=1120,y=522,height=41)
+Vehiclename_Entry.place(x=1120,y=500,height=41)
 
 
 Duration_label=Label(text="Duration  :",bg="#FECE2F",fg="black",font=("Georgia",20))
