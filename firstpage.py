@@ -22,11 +22,7 @@ def login():
     
     '''
     root.destroy()
-    import reg1
-    
- 
-
-
+    import registrationpage
 
 #frame is used to create a separate frame inside the tkinter window and it's bg and geometry can be changed
 frame1 = Frame(root, height = 497,bg = "white", width = 700)
@@ -40,7 +36,7 @@ def open_image(file_path):
     image = Image.open(file_path)
     return ImageTk.PhotoImage(image)
 
-image_path = (r"C:\Users\user\Downloads\computer.png") #here is the image path and also the image format should me mentioned in order for it to be imported successfully
+image_path = ("SAAA-parking-management1\\resources\\image_firstpage.png") #here is the image path and also the image format should me mentioned in order for it to be imported successfully
 
 image = open_image(image_path)
 label = tk.Label(root, image=image,bg = "white", width = 600, height = 650)#background and geometry of image is changed according to the window 
@@ -49,7 +45,7 @@ label.place(anchor = CENTER, x =790, y = 400 ) #anchor is used to adjust the ima
 
 
 #this is the second image along with its path in the computer 
-image_path = (r"C:\Users\user\Downloads\sasa.png")
+image_path = ("SAAA-parking-management1\\resources\\logo_firstpage.png")
 
 img2 = open_image(image_path)
 label2 = tk.Label(root,image = img2,bg = "white",width = 246, height = 61.38 )

@@ -22,7 +22,8 @@ def adding_record():
 
     conn.commit()
     conn.close()
-
+    window.destroy()
+    import mainpage
 window=Tk()
 window.title("add window")
 #setting up window size and background
