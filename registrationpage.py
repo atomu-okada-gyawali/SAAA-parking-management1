@@ -23,14 +23,18 @@ def register():
                 isValidEmail = False
                 break
         
+        
         assert isValidEmail,'Invalid email entry'
         assert True in map(lambda x: bool(x), entryValuesList), 'You have incomplete entry, please try again'
         assert p1.get() == c1.get(), 'Your passwords are not matching'
         conn = sqlite3.connect('parkingmanagement.db')
         cursor = conn.cursor()
         cursor.execute('SELECT UserUName FROM User')
-        usernameList = cursor.fetchall()[0]
-        assert u1.get() not in usernameList, 'Username already taken'
+        if cursor.fetchall() == None:
+            pass
+        else:
+            usernameList = cursor.fetchall()
+            assert u1.get() not in usernameList, 'Username already taken'
 
         conn.close()
         conn = sqlite3.connect('parkingManagement.db')
@@ -49,6 +53,8 @@ def register():
             pass
     except ValueError:
         response = messagebox.showerror('Invalid value','Enter your values appropriately')
+    except IndexError:
+        pass
 
 
 

@@ -9,33 +9,35 @@ from tkinter import messagebox # for pop up message box
 
 
 def adding_record():
-    with open('currentSlot.txt', 'r') as slotFile:
-        parking_slot = slotFile.read()
-    
-    if parking_slot.startswith('A') or parking_slot.startswith('B') or parking_slot.startswith('C'):
-        type = 'four-wheeler'
-    else:
-        type = 'two-wheeler'
+    try:
+        with open('currentSlot.txt', 'r') as slotFile:
+            parking_slot = slotFile.read()
+        
+        if parking_slot.startswith('A') or parking_slot.startswith('B') or parking_slot.startswith('C'):
+            type = 'four-wheeler'
+        else:
+            type = 'two-wheeler'
 
-    
-    if False in map(lambda entry:bool(entry),[username_Entry.get(),Phonenum_Entry.get(),Vehiclenum_Entry.get(),Vehiclename_Entry.get(),Duration_Entry.get()]):
-        messagebox.showinfo("Warning!","The entry box is not filled")
-    else:
-        conn = sqlite3.connect('parkingManagement.db')
-        cursor = conn.cursor()
-        check_inDatetime = datetime.datetime.now()
-        check_outDatetime = check_inDatetime + datetime.timedelta(minutes= int(Duration_Entry.get()))
-        check_in = f"{check_inDatetime.hour}: {check_inDatetime.minute}"
-        check_out = f"{check_outDatetime.hour}: {check_outDatetime.minute}"
-        cursor.execute('''
-                    INSERT INTO Customer(
-                    CustomerName,PhoneNumber,Duration, Check_in, Check_out,VehicleNumber,VehicleName,ParkingSlotName,VehicleType) VALUES(?,?,?,?,?,?,?,?,?)''', [username_Entry.get(), Phonenum_Entry.get(),Duration_Entry.get(),check_in,check_out,Vehiclenum_Entry.get(), Vehiclename_Entry.get(),parking_slot,type]
-                    )
+        if False in map(lambda entry:bool(entry),[username_Entry.get(),int(Phonenum_Entry.get()),Vehiclenum_Entry.get(),Vehiclename_Entry.get(),int(Duration_Entry.get())]):
+            messagebox.showinfo("Warning!","The entry box is not filled")
+        else:
+            conn = sqlite3.connect('parkingManagement.db')
+            cursor = conn.cursor()
+            check_inDatetime = datetime.datetime.now()
+            check_outDatetime = check_inDatetime + datetime.timedelta(minutes= int(Duration_Entry.get()))
+            check_in = f"{check_inDatetime.hour}: {check_inDatetime.minute}"
+            check_out = f"{check_outDatetime.hour}: {check_outDatetime.minute}"
+            cursor.execute('''
+                        INSERT INTO Customer(
+                        CustomerName,PhoneNumber,Duration, Check_in, Check_out,VehicleNumber,VehicleName,ParkingSlotName,VehicleType) VALUES(?,?,?,?,?,?,?,?,?)''', [username_Entry.get(), Phonenum_Entry.get(),Duration_Entry.get(),check_in,check_out,Vehiclenum_Entry.get(), Vehiclename_Entry.get(),parking_slot,type]
+                        )
 
-    conn.commit()
-    conn.close()
-    window.destroy()
-    import mainpage
+        conn.commit()
+        conn.close()
+        window.destroy()
+        import mainpage
+    except ValueError:
+        messagebox.showinfo("Warning!","Wrong datatype entry in either Phone number input or Duration input or both")
 window=Tk()
 window.title("add window")
 #setting up window size and background

@@ -415,13 +415,13 @@ buttonFrame = Frame(rightFrame, width = 292, height = 417 )
 buttonFrame.pack()
 buttonFrame.pack_propagate(False)
 
-addButton = Button(buttonFrame,state = DISABLED, text = 'Add Vehicle', width = 20, height = 2,command = goto_addpage)
+addButton = Button(buttonFrame,state = DISABLED, text = 'Add Vehicle', width = 20, height = 2, command = goto_addpage)
 addButton.pack(pady = 15)
 
 updateButton = Button(buttonFrame,state = DISABLED, text = 'Update Slot', width = 20, height = 2, command = goto_updatepage)
 updateButton.pack(pady = 15)
 
-deleteButton = Button(buttonFrame,state = DISABLED, text = 'Delete Vehicle', width = 20, height = 2,command = delete)
+deleteButton = Button(buttonFrame,state = DISABLED, text = 'Delete Vehicle', width = 20, height = 2, command = delete)
 deleteButton.pack(pady = 15)
 
 billButton = Button(buttonFrame,state = DISABLED, text = 'Bill', width = 20, height = 2,command = goto_billpage)
