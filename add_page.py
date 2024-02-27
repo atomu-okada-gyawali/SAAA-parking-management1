@@ -11,6 +11,13 @@ from tkinter import messagebox # for pop up message box
 def adding_record():
     with open('currentSlot.txt', 'r') as slotFile:
         parking_slot = slotFile.read()
+    
+    if parking_slot.startswith('A') or parking_slot.startswith('B') or parking_slot.startswith('C'):
+        type = 'four-wheeler'
+    else:
+        type = 'two-wheeler'
+
+    
     if False in map(lambda entry:bool(entry),[username_Entry.get(),Phonenum_Entry.get(),Vehiclenum_Entry.get(),Vehiclename_Entry.get(),Duration_Entry.get()]):
         messagebox.showinfo("Warning!","The entry box is not filled")
     else:
@@ -22,7 +29,7 @@ def adding_record():
         check_out = f"{check_outDatetime.hour}: {check_outDatetime.minute}"
         cursor.execute('''
                     INSERT INTO Customer(
-                    CustomerName,PhoneNumber,Duration, Check_in, Check_out,VehicleNumber,VehicleName,VehicleType,ParkingSlotName) VALUES(?,?,?,?,?,?,?,?,?)''', [username_Entry.get(), Phonenum_Entry.get(),Duration_Entry.get(),check_in,check_out,Vehiclenum_Entry.get(), Vehiclename_Entry.get(),parking_slot]
+                    CustomerName,PhoneNumber,Duration, Check_in, Check_out,VehicleNumber,VehicleName,ParkingSlotName,VehicleType) VALUES(?,?,?,?,?,?,?,?,?)''', [username_Entry.get(), Phonenum_Entry.get(),Duration_Entry.get(),check_in,check_out,Vehiclenum_Entry.get(), Vehiclename_Entry.get(),parking_slot,type]
                     )
 
     conn.commit()

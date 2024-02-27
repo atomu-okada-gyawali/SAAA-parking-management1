@@ -3,12 +3,53 @@ from tkinter import *
 import tkinter as tk
 from PIL import Image, ImageTk
 import tkinter.ttk as ttk
-
+import sqlite3
+from tkinter import messagebox
+import string
 #tk() is used to create a tkinter window 
 win = Tk()
 win.title = ("registration page")#title for the tkinter window 
 win.geometry("1624x950")#geometric specification of the tkinter window 
 win.config(bg = "white")#using config to change the background color of the window
+
+def register():
+    try:
+        entryValuesList = [f1.get(),l1.get(),u1.get(),e1.get(),p1.get(),selected_option.get(),int(spin_temp.get()),positon_option.get(),int(ph1.get())]
+
+        for spCh in string.punctuation:
+            if not e1.get().startswith(spCh) and (e1.get().endswith('@gmail.com')):
+                isValidEmail = True
+            else:
+                isValidEmail = False
+                break
+        
+        assert isValidEmail,'Invalid email entry'
+        assert True in map(lambda x: bool(x), entryValuesList), 'You have incomplete entry, please try again'
+        assert p1.get() == c1.get(), 'Your passwords are not matching'
+        conn = sqlite3.connect('parkingmanagement.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT UserUName FROM User')
+        usernameList = cursor.fetchall()[0]
+        assert u1.get() not in usernameList, 'Username already taken'
+
+        conn.close()
+        conn = sqlite3.connect('parkingManagement.db')
+        cursor = conn.cursor()
+        cursor.execute("""INSERT INTO User(UserFName,UserLName,UserUName,UserEmail,UserPassword,UserGender,UserAge,UserPosition,UserPhoneNumber) VALUES(?,?,?,?,?,?,?,?,?)""",entryValuesList)
+        conn.commit()
+        conn.close()
+        win.destroy()
+        import loginpage
+
+    except AssertionError as error:
+        response = messagebox.showerror('Registration Error',str(error))
+        if response:
+            pass
+        else:
+            pass
+    except ValueError:
+        response = messagebox.showerror('Invalid value','Enter your values appropriately')
+
 
 
 #function created in order to import image inside the tkinter window 
@@ -127,7 +168,7 @@ ph1 = Entry(win, width = 29)
 ph1.place(x = 1023, y =638 )
 
 #button for resgistration process to proceed 
-reg_btn = Button(win, text = "        Register Now       ",fg ="black", bg = "#FFC125", font = ("open sans",10))
+reg_btn = Button(win, text = "        Register Now       ",fg ="black", bg = "#FFC125", font = ("open sans",10), command= register)
 reg_btn.place(x = 1023, y = 730)
 
 cancel_btn = Button(win, text = "               Cancel              ", fg ="#FCFAF7", bg ="black", font= ("open sans",9), command = firstpage  )

@@ -4,15 +4,17 @@ import tkinter as tk
 from PIL import Image, ImageTk #this module is used to import the image inside the window 
 import tkinter.ttk as ttk
 import sqlite3
+from datetime import datetime
 
 b = Tk()#creating the tkinter window 
 b.title("Bill")#title of the window 
 b.geometry("1624x962")#setting the geometry of the window
 b.config(bg = "#FECE2F")#setting the background color of the window
 
-
-
-
+current_date = datetime.now()
+twoWheelerRate = 50
+fourWheelerRate = 100
+formatted_date = current_date.strftime(r'%Y/%m/%d')
 def open_image(file_path):
     '''
     this function is created in order to open the image or import image inside the window
@@ -37,6 +39,16 @@ lblll.pack()
 lblll.place(anchor ="nw", x= 23, y = 32)
 
 
+def total():
+    with open('currentSlot.txt') as current_slot:
+        bill_slot = current_slot.read()
+    conn = sqlite3.connect('parkingManagement.db')
+    cursor = conn.cursor()
+    cursor.execute('''DELETE FROM Customer WHERE ParkingSlotName = (?)''',(bill_slot,))
+    conn.commit()
+    conn.close()
+    b.destroy()
+    import mainpage
 
 
 
@@ -61,60 +73,53 @@ lbl5.place(x = 108, y = 571)
 lbl6 = Label(b, text = "VEHICLE NUMBER PLATE :", fg = "black", bg = "#FECE2F", font = ("Georgia ", 14))
 lbl6.place(x =71, y = 672 )
 
-lbl7 = Label(b, text = "PARKING TIME :", fg = "black", bg = "#FECE2F", font = ("Georgia", 14))
-lbl7.place(x = 532 , y = 208)
 
-lbl8 = Label(b, text ="OVER TIME :", fg = "black", bg = "#FECE2F", font = ("georgia", 14) )
-lbl8.place(x = 550, y = 297)
 
 lbl9 = Label(b, text = "NAME :", fg = "black", bg = "#FECE2F", font = ("georgia", 14))
-lbl9.place(x =576, y = 394)
+lbl9.place(x =576, y = 208)
 
 lbll = Label(b, text= "DATE :", fg = "black", bg = "#FECE2F", font = ("georgia ", 14))
-lbll.place(x =577, y = 487 )
+lbll.place(x =577, y = 301 )
 
 lbll1 = Label(b, text = "DURATION :", fg = "black", bg = "#FECE2F", font = ("georgia", 14))
-lbll1.place(x =553, y = 571)
+lbll1.place(x =553, y = 478-93)
 
 lbll2 = Label( b, text = "PARKING RATE :", fg = "black", bg = "#FECE2F", font = ("georgia ", 14))
-lbll2.place(x = 533, y = 672 )
+lbll2.place(x = 533, y = 579-93 )
 
-vehicleidvalue = Label(b, text = "", fg= "black", bg ="#FECE2F", font = ("Georgia ", 14 ))
-vehicleidvalue.place(x =300, y = 208 )
+amountValue = Label(b, text = "", fg= "black", bg ="#FECE2F", font = ("Georgia ", 14 ))
+amountValue.place(x =300, y = 208 )
 
-vehicleTypeValue = Label(b, text ='unchi',bg = "#FECE2F", font = ("georgia",14))
-vehicleTypeValue.place(x = 300, y = 302)
+vehicleTypeValue = Label(b, text ='',bg = "#FECE2F", font = ("georgia",14))
+vehicleTypeValue.place(x = 300, y = 301)
 
-vehiclenameValue = Label(b, text ='two-wheeler',bg = "#FECE2F", font = ("georgia",14))
-vehiclenameValue.place(x = 300, y = 399)
+vehiclenameValue = Label(b, text ='',bg = "#FECE2F", font = ("georgia",14))
+vehiclenameValue.place(x = 300, y = 385)
 
-checkintimeValue = Label(b, text ='two-wheeler',bg = "#FECE2F", font = ("georgia",14))
+checkintimeValue = Label(b, text ='',bg = "#FECE2F", font = ("georgia",14))
 checkintimeValue.place(x = 300, y = 487)
 
-checkouttimeValue = Label(b, text ='two-wheeler',bg = "#FECE2F", font = ("georgia",14))
+checkouttimeValue = Label(b, text ='',bg = "#FECE2F", font = ("georgia",14))
 checkouttimeValue.place(x = 300, y = 571)
 
 vehiclenumberplateValue = Label(b, text ='',bg = "#FECE2F", font = ("georgia",14))
 vehiclenumberplateValue.place(x = 320, y = 672)
 
-parkingtimevalue = Label(b, text ='two-wheeler',bg = "#FECE2F", font = ("georgia",14))
-parkingtimevalue.place(x = 700, y = 208)
+parkingtimevalue = Label(b, text ='',bg = "#FECE2F", font = ("georgia",14))
+parkingtimevalue.place(x = 700, y = 486)
 
 
-overtimeValue = Label(b, text ='two-wheeler',bg = "#FECE2F", font = ("georgia",14))
-overtimeValue.place(x = 700, y = 297)
+NameValue = Label(b, text ='',bg = "#FECE2F", font = ("georgia",14))
+NameValue.place(x = 700, y = 208)
 
-NameValue = Label(b, text ='two-wheeler',bg = "#FECE2F", font = ("georgia",14))
-NameValue.place(x = 700, y = 394)
-
-DateValue = Label(b, text ='two-wheeler',bg = "#FECE2F", font = ("georgia",14))
-DateValue.place(x = 700, y = 487)
+DateValue = Label(b, text ='',bg = "#FECE2F", font = ("georgia",14))
+DateValue.place(x = 700, y = 301)
 
 Durationvalue= Label(b, text = "DURATION :", fg = "black", bg = "#FECE2F", font = ("georgia", 14))
-Durationvalue.place(x = 700, y = 571)
+Durationvalue.place(x = 700, y = 486-93)
 
 parkingratevalue= Label( b, text = "PARKING RATE :", fg = "black", bg = "#FECE2F", font = ("georgia ", 14))
-parkingratevalue.place(x = 700, y = 672 )
+parkingratevalue.place(x = 700, y = 579-93)
 
 
 with open('currentSlot.txt') as currentSlot:
@@ -123,22 +128,27 @@ conn = sqlite3.connect('parkingManagement.db')
 cursor = conn.cursor()
 cursor.execute('SELECT * FROM Customer WHERE ParkingSlotName = (?)',(cSlot,))
 currentRecord = cursor.fetchone()
-vehicleidvalue.config(text= currentRecord[0])
-vehicleTypeValue.config(text = currentRecord[9])
-vehiclenameValue.config(text = currentRecord[1])
-checkintimeValue.config(text = currentRecord[2])
-checkouttimeValue.config(text = currentRecord[3])
-vehiclenumberplateValue.config(text = currentRecord[7])
-overtimeValue.config(text = currentRecord[5])
-NameValue.config(text = currentRecord[6])
-# DateValue.config(text = currentRecord[])
-Durationvalue.config(text = currentRecord[8])
-# parkingratevalue.config(text = currentRecord[9])
 conn.commit()
 conn.close()
-    
+type = currentRecord[9]
+duration = currentRecord[5]
+if type == 'two-wheeler':
+    rate = twoWheelerRate 
+elif type == 'four-wheeler':
+    rate = fourWheelerRate 
+amount = rate *(duration)/60
+amountValue.config(text= f"Rs {amount}")
+vehicleTypeValue.config(text = currentRecord[9])
+vehiclenameValue.config(text = currentRecord[7])
+checkintimeValue.config(text = currentRecord[2])
+checkouttimeValue.config(text = currentRecord[3])
+vehiclenumberplateValue.config(text = currentRecord[6])
+NameValue.config(text = currentRecord[1])
+DateValue.config(text = formatted_date)
+Durationvalue.config(text = f"{currentRecord[5]} minutes")
+parkingratevalue.config(text = f"Rs {rate}/hour")
 
 #button used to insert the clickable button inside the window and setting the background, foreground and the fonts of the text 
-total_btn = Button(b, text= "   TOTAL   ", fg = "black", bg  = "#FECE2F", font = ("georgia",18))
+total_btn = Button(b, text= "   TOTAL   ", fg = "black", bg  = "#FECE2F", font = ("georgia",18),command = total)
 total_btn.place(x = 360, y = 750)
 b.mainloop()#mainloop used to display the window 

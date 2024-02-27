@@ -1,10 +1,28 @@
 from tkinter import *
 import tkinter.ttk as ttk
 import tkinter as tk
-
+import sqlite3
 from PIL import Image, ImageTk
 
+conn = sqlite3.connect('parkingManagement.db')
+cursor = conn.cursor()
 
+cursor.execute('''CREATE TABLE IF NOT EXISTS User(
+            UserID INTEGER PRIMARY KEY AUTOINCREMENT,
+            UserFName TEXT NOT NULL,
+            UserLName TEXT NOT NULL,
+            UserUName TEXT NOT NULL,
+            UserEmail TEXT NOT NULL,
+            UserPassword TEXT NOT NULL,
+            UserGender TEXT NOT NULL,
+            UserAge TEXT NOT NULL,
+            UserPosition TEXT NOT NULL,
+            UserPhoneNumber TEXT NOT NULL
+)''')
+
+
+conn.commit()
+conn.close()
 #creating a tkinter window
 root = Tk()
 #title of the tkinter window
@@ -14,13 +32,17 @@ root.geometry("1625x950")
 #using config to edit the background of the window
 root.config (bg = "white")
 
-def login():
+def goto_login():
     '''Here the login funtion is created 
     in order to go from one window to another destroying the previous 
     window in process using the destroy() and 
     also the new window is import using import module 
     
     '''
+    root.destroy()
+    import loginpage
+
+def goto_register():
     root.destroy()
     import registrationpage
 
@@ -68,10 +90,10 @@ lbl2 = Label(root, text = "make your own space", bg = "white", fg = "black", fon
 lbl2.place(x =692, y = 85 )
 
 #button is used to create a button that is functional when clicked and it can be edited according to the need 
-log_btn = Button(root, text = "          LOGIN          ", fg = "black", bg = "#FFC125", font = ("Georgia", 14))
+log_btn = Button(root, text = "          LOGIN          ", fg = "black", bg = "#FFC125", font = ("Georgia", 14),command = goto_login)
 log_btn.place(x =700, y = 660 )
 
-signup_btn = Button(root, text = "         SIGNUP         ", bg = "#FFC125", fg = "black", font = ("Georgia",14),command = login)
+signup_btn = Button(root, text = "         SIGNUP         ", bg = "#FFC125", fg = "black", font = ("Georgia",14),command = goto_register)
 #here login command is added in order to go the next window when we click the that specific button
 signup_btn.place(x = 700, y=740)
 

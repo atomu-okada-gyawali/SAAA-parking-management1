@@ -2,11 +2,8 @@ from tkinter import *
 import sqlite3
 from PIL import ImageTk, Image
 from time import strftime
-# import ctypes
-# ctypes.windll.shcore.SetProcessDpiAwareness(1)
+from tkinter import messagebox
 
-with open('parkingRate.txt','w') as rate:
-        rate.write('')
 #initiating currentSlot.txt which stores the recently clicked slot
 with open('currentSlot.txt','w') as currentSlot:
         currentSlot.write('')
@@ -41,6 +38,14 @@ def goto_optionspage():
         root.destroy()
         import optionpage
 
+def goto_firstpage():
+        log_out = messagebox.askquestion('Log out Confirmation','Are you sure you want to log out?')
+        if log_out == 'yes':
+                root.destroy()
+                import firstpage
+                with open('currentlyLoggedUser.txt', 'w') as currentUser:
+                        currentUser.write('')
+
 # def info_retreive():
 #         conn = sqlite3.connect('parkingManagement.db')
 #         c = conn.cursor()
@@ -49,48 +54,78 @@ def goto_optionspage():
 #         print(current_record)
 #         conn.close()
 
+def delete():
+        with open('currentSlot.txt', 'r') as currentSlot:
+                        slotInFile = currentSlot.read()
+        answer = messagebox.askquestion("Delete Record?", f"Do you want to delete record from {slotInFile}?")
+        if answer == 'yes':
+                conn = sqlite3.connect('parkingManagement.db')
+                cursor = conn.cursor()
+                cursor.execute('''DELETE FROM Customer WHERE ParkingSlotName = (?)''',(slotInFile,))
+                conn.commit()
+                conn.close()
+                for subparkingFrame in parkingFrame.winfo_children():
+                        for cSlot in subparkingFrame.winfo_children():
+                                if cSlot.cget('text') == slotInFile:
+                                        cSlot.config(bg = 'SystemButtonFace')
+                                        conn = sqlite3.connect('parkingManagement.db')
+                                        cursor = conn.cursor()
+                                        cursor.execute("""SELECT * FROM customer""")
+                                        usedSlots = len(cursor.fetchall())
+                                        space.config(text = f'{28-usedSlots}')
+                                        conn.close()
+                                        select(cSlot)
+
+
+        else:
+                pass
+        
+        
+        
 def select(slot):
         '''this function writes the name of the currently clicked slot button in the currentSlot.txt, but writes empty string when the slotButton is clicked twice indicating the deselection'''
         with open('currentSlot.txt', 'r') as currentSlot:
                 slotInFile = currentSlot.read(2)
 
-        if slotInFile != slot.cget('text'):
+                
+
+        if slotInFile != slot.cget('text') or slotInFile == '':
                 with open('currentSlot.txt', 'w') as currentSlot:
                         currentSlot.write(slot.cget('text'))
                 conn = sqlite3.connect('parkingManagement.db')
                 c = conn.cursor()
                 with open('currentSlot.txt', 'r') as currentSlot:
                         slotInFile = currentSlot.read()
-                try:
                         c.execute('SELECT * FROM Customer WHERE ParkingSlotName = (?)',(slotInFile,))
                         current_record = c.fetchone()
-                        nameValue.config(text = current_record[1])
-                        ciValue.config(text = current_record[2])
-                        coValue.config(text = current_record[3])
-                        phoneValue.config(text=current_record[4])
-                        vNoValue.config(text=current_record[7])
-                        vNameValue.config(text = current_record[8])
-                        slotValue.config(text = current_record[10])
-                        print(current_record)
-                        conn.close()
+                        if current_record != None:
+                                nameValue.config(text = current_record[1])
+                                ciValue.config(text = current_record[2])
+                                coValue.config(text = current_record[3])
+                                phoneValue.config(text=current_record[4])
+                                vNoValue.config(text=current_record[6])
+                                vNameValue.config(text = current_record[7])
+                                slotValue.config(text = current_record[8])
+                                conn.close()
 
-                        addButton.config(state = DISABLED, bg = '#FECE2F')
-                        updateButton.config(state = NORMAL, bg = '#FECE2F')
-                        deleteButton.config(state = NORMAL, bg = '#FECE2F')
-                        billButton.config(state = NORMAL, bg = '#FECE2F')
-                except TypeError:
-                        nameValue.config(text = "")
-                        ciValue.config(text = "")
-                        coValue.config(text = "")
-                        phoneValue.config(text="")
-                        vNoValue.config(text="")
-                        vNameValue.config(text = "")
-                        slotValue.config(text = slot.cget('text'))
+                                addButton.config(state = DISABLED, bg = '#FECE2F')
+                                updateButton.config(state = NORMAL, bg = '#FECE2F')
+                                deleteButton.config(state = NORMAL, bg = '#FECE2F')
+                                billButton.config(state = NORMAL, bg = '#FECE2F')
+                        else:
+                                nameValue.config(text = "")
+                                ciValue.config(text = "")
+                                coValue.config(text = "")
+                                phoneValue.config(text="")
+                                vNoValue.config(text="")
+                                vNameValue.config(text = "")
+                                slotValue.config(text = slot.cget('text'))
 
-                        addButton.config(state = NORMAL, bg = '#FECE2F')
-                        updateButton.config(state = DISABLED, bg = '#FECE2F')
-                        deleteButton.config(state = DISABLED, bg = '#FECE2F')
-                        billButton.config(state = DISABLED, bg = '#FECE2F')
+                                addButton.config(state = NORMAL, bg = '#FECE2F')
+                                updateButton.config(state = DISABLED, bg = '#FECE2F')
+                                deleteButton.config(state = DISABLED, bg = '#FECE2F')
+                                billButton.config(state = DISABLED, bg = '#FECE2F')
+
         elif slotInFile == slot.cget('text'):
                 with open('currentSlot.txt', 'w') as currentSlot:
                         currentSlot.write('')
@@ -117,39 +152,11 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS Customer(
                Check_out TEXT NOT NULL,
                PhoneNumber INTEGER NOT NULL,
                Duration INTEGER NOT NULL,
-               Overtime_duration INTEGER,
                VehicleNumber INTEGER NOT NULL,
                VehicleName TEXT NOT NULL,
-               VehicleType TEXT NOT NULL,
-               ParkingSlotName TEXT NOT NULL
+               ParkingSlotName TEXT NOT NULL,
+               VehicleType TEXT NOT NULL
 )''')
-
-
-'''creating nested list of the records of parking slots with their respective names,slottypes,Rate,OvertimeRate.
-Foreg:
-[['A1', 'four-wheeler'],
- ['A2', 'four-wheeler'],
- ['A3', 'four-wheeler'],
- ['A4', 'four-wheeler'],
- ['A5', 'four-wheeler'],
- ['A6', 'four-wheeler'],
- ['B1', 'four-wheeler'],
- ['B2', 'four-wheeler'],
- ['B3', 'four-wheeler'],
- ................................
-[]'''
-slotList = []
-
-for firstLetter in ('A','B','C','D'):
-        if firstLetter != 'D':
-                for secondNumber in range(1, 7):
-                        slotList.append([firstLetter+ str(secondNumber), 'four-wheeler'])
-        else:
-                for secondNumber in range(1,11):
-                        slotList.append([firstLetter+ str(secondNumber), 'two-wheeler'])
-                
-
-
 
 cursor.execute('''CREATE TABLE IF NOT EXISTS Bill(
                BillID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -164,18 +171,7 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS Bill_User(
                FOREIGN KEY (BillID) REFERENCES Bill(BillID),
                FOREIGN KEY (UserID) REFERENCES User(UserID)
 )''')
-cursor.execute('''CREATE TABLE IF NOT EXISTS User(
-               UserID INTEGER PRIMARY KEY AUTOINCREMENT,
-               UserFName TEXT,
-               UserLName TEXT,
-               UserUName TEXT,
-               UserEmail TEXT,
-               UserPassword TEXT,
-               UserGender TEXT,
-               UserAge TEXT,
-               UserPosition TEXT,
-               UserPhoneNumber TEXT
-)''')
+
 conn.commit()
 conn.close()
 
@@ -192,16 +188,32 @@ logo = Label(sidebarFrame, image = img)
 logo.pack()
 
 #Frame for Buttons in the sidebar
-sideButtonFrame = Frame(sidebarFrame,width = 327, height = 500, bg = '#FECE2F')
+sideButtonFrame = Frame(sidebarFrame,width = 327, height = 300, bg = '#FECE2F')
 sideButtonFrame.pack()
 sideButtonFrame.pack_propagate(False)
 
+loggerInfoFrame = Frame(sidebarFrame,width = 327, height = 100,bg = '#FECE2F')
+loggerInfoFrame.pack()
+loggerInfoFrame.pack_propagate(False)
+
+#Frame for currently logged in info
+loggedInInfo = Label(loggerInfoFrame, text='Currently logged in as ', bg = '#FECE2F', font = ('Georgia', 13))
+loggedInInfo.pack()
+with open('currentlyLoggedUser.txt','r') as currentUser:
+        cUser = currentUser.read()
+conn = sqlite3.connect('parkingManagement.db')
+cursor = conn.cursor()
+cursor.execute('''SELECT * FROM User WHERE UserID = (?)''',(cUser,))
+loggedUser = cursor.fetchone()[3]
+print(loggedUser)
+loggedInInfoValue = Label(loggerInfoFrame,text = str(loggedUser), bg = '#FECE2F', font = ('Georgia bold', 17))
+loggedInInfoValue.pack()
 #Buttons for Sidebar----------------------------------------------
 parkingButton = Button(sideButtonFrame, text = 'Dashboard', font = ('Georgia bold', 16), height = 2, relief = FLAT, bg = '#FECE2F')
 parkingButton.pack(fill = X)
 
-optionsButton = Button(sideButtonFrame, text = 'Options', font = ('Georgia bold', 16), height = 2, relief = FLAT, bg = '#FECE2F',command = goto_optionspage)
-optionsButton.pack(fill = X)
+# optionsButton = Button(sideButtonFrame, text = 'Options', font = ('Georgia bold', 16), height = 2, relief = FLAT, bg = '#FECE2F',command = goto_optionspage)
+# optionsButton.pack(fill = X)
 
 # currentRecordsButton = Button(sideButtonFrame, text = 'Current Records', font = ('Georgia bold', 16), height = 2)
 # currentRecordsButton.pack(fill = X)
@@ -209,7 +221,7 @@ optionsButton.pack(fill = X)
 # statisticsButton = Button(sideButtonFrame, text = 'Statistics', font = ('Georgia bold', 16), height = 2)
 # statisticsButton.pack(fill = X)
 
-logoutButton = Button(sideButtonFrame, text = 'Logout', font = ('Georgia bold', 16), height = 2, relief = FLAT, bg = '#FECE2F')
+logoutButton = Button(sideButtonFrame, text = 'Logout', font = ('Georgia bold', 16), height = 2, relief = FLAT, bg = '#FECE2F',command = goto_firstpage)
 logoutButton.pack(fill = X)
 #----------------------------------------------------------------
 
@@ -331,16 +343,16 @@ cursor.execute('''SELECT * FROM Customer ''')
 currentCustomerRecords = cursor.fetchall()
 currentSlotList = []
 for customerRecord in currentCustomerRecords:
-        currentSlotList.append(customerRecord[10])
+        currentSlotList.append(customerRecord[8])
 currentCustomerNO = len(currentCustomerRecords)
 conn.commit()
 conn.close()
 availableSlots = 28 - currentCustomerNO
 
 for subparkingFrame in parkingFrame.winfo_children():
-        for slot in subparkingFrame.winfo_children():
-                if slot.cget('text') in currentSlotList:
-                        slot.config(bg = 'lime')
+        for currentyUsedSlot in subparkingFrame.winfo_children():
+                if currentyUsedSlot.cget('text') in currentSlotList:
+                        currentyUsedSlot.config(bg = 'lime')
 space = Label(csFrame,text = str(availableSlots), font = ('Georgia', 15))
 space.pack()
 
@@ -355,7 +367,7 @@ info1Frame.pack(pady = 20)
 slotLabel = Label(info1Frame, text = 'Slot: ', font = ('Georgia', 13))
 slotLabel.grid(row = 0, column = 0)
 
-slotValue = Label(info1Frame, text = 'A1', font = ('Georgia', 13))
+slotValue = Label(info1Frame, text = '', font = ('Georgia', 13))
 slotValue.grid(row = 0, column = 1)
 
 info2Frame = Frame(infoFrame)
@@ -409,7 +421,7 @@ addButton.pack(pady = 15)
 updateButton = Button(buttonFrame,state = DISABLED, text = 'Update Slot', width = 20, height = 2, command = goto_updatepage)
 updateButton.pack(pady = 15)
 
-deleteButton = Button(buttonFrame,state = DISABLED, text = 'Delete Vehicle', width = 20, height = 2)
+deleteButton = Button(buttonFrame,state = DISABLED, text = 'Delete Vehicle', width = 20, height = 2,command = delete)
 deleteButton.pack(pady = 15)
 
 billButton = Button(buttonFrame,state = DISABLED, text = 'Bill', width = 20, height = 2,command = goto_billpage)
