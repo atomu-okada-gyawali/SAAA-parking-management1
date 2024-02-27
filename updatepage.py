@@ -6,20 +6,44 @@ from tkinter import messagebox
 win=Tk()
 win.configure(bg="#FECE2F",width=700,height=100)
 win.title("Update") #to change the tilte we used .title
-# win.iconbitmap("icon.ico") # to change the icon
 win.geometry("1624x962")
+
 with open('currentSlot.txt', 'r') as currentSlot:
         slotInFile = currentSlot.read(2)
 def submit():
+    '''updates the record of the customer in selected slot'''
     try:
-        entryList = [nameValue.get(), phoneNumValue.get(), vehicle_noValue.get(), parkingSlotValue.get()]   
-        assert '' in map(lambda x: bool(x), entryList), 'Incomplete entry'
+
+        entryList = [nameValue.get(), phoneNumValue.get(), vehicle_noValue.get(), parkingSlotValue.get()] 
+
+        assert True in map(lambda x: bool(x), entryList), 'Incomplete entry' #truth value of every items in the entryList must be True
+        
         conn = sqlite3.connect('parkingManagement.db')
         parking_slot = parkingSlotValue.get()
-        if parking_slot.startswith('A') or parking_slot.startswith('B') or parking_slot.startswith('C'):
-            type = 'four-wheeler'
-        else:
-            type = 'two-wheeler'
+
+        # Assures the the name of the parking slot is an alphabet followed by a number
+        assert len(parking_slot) == 2 and parking_slot[0].isalpha() and parking_slot[1].isnumeric(), 'There must be a letter followed by a number while naming a parking slot'
+
+        # Further assures the name of the parking slot is correct
+        assert parking_slot[0] in ['A','B','C','D'], f'No {parking_slot[0]} in name of parking_slot'
+        if parking_slot[0] in ['A','B','C']:
+             assert int(parking_slot[1]) in range(1,7), 'No numbers more than 6 after A, B OR C'
+        if parking_slot[0] == 'D':
+            assert int(parking_slot[1]) in range(1,11), 'No numbers more than 10 after D'
+
+        # Check if the entered parking slot is occupied or not
+        conn = sqlite3.connect('parkingManagement.db')
+        cursor = conn.cursor()
+        cursor.execute('''SELECT ParkingSlotName FROM Customer''')
+        occupiedSlotList = cursor.fetchall()[0]
+        occupiedSlotList = list(occupiedSlotList)
+        if slotInFile in occupiedSlotList:
+            occupiedSlotList.remove(slotInFile)
+        assert parking_slot not in occupiedSlotList,f'{parking_slot} is currently occupied'
+        conn.close()
+
+        #if all the assertions are passed, then the updation of the record occurs
+        conn = sqlite3.connect('parkingManagement.db')
         c = conn.cursor()
         c.execute(f'''
             UPDATE Customer SET
@@ -34,12 +58,13 @@ def submit():
                 'phone': phoneNumValue.get(),
                 'vehicle_number': vehicle_noValue.get(),
                 'parking_slot_name': parking_slot,
-                'slot_name': slotInFile  # Assuming slotInFile is a variable
+                'slot_name': slotInFile  
                 })
         conn.commit()
         conn.close()
         win.destroy()
         import mainpage
+    #When the assertion error occurs
     except AssertionError as e:
          messagebox.askretrycancel('Updation Error', e)
 update=Frame(win,bg="white",width=812,height=962)
@@ -84,7 +109,7 @@ phoneNumValue=Entry(win,text="",width=40)
 phoneNumValue.place(x=1240,y=510-75)
 
 
-
+# inserts the values to be updated in their respective entry boxes individually
 conn = sqlite3.connect('parkingManagement.db')
 with open('currentSlot.txt') as currentSlot:
     slotInFile = currentSlot.read(2)

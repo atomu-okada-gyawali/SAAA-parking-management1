@@ -5,7 +5,7 @@ from PIL import Image,ImageTk
 import sqlite3
 import datetime
 from datetime import timedelta
-from tkinter import messagebox # for pop up message box 
+from tkinter import messagebox 
 
 
 def adding_record():

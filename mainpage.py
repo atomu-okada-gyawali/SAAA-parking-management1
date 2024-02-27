@@ -33,12 +33,9 @@ def goto_updatepage():
         root.destroy()
         import updatepage
 
-def goto_optionspage():
-        '''go to options page'''
-        root.destroy()
-        import optionpage
 
 def goto_firstpage():
+        '''logs out and remove tracking of currently-logged in user'''
         log_out = messagebox.askquestion('Log out Confirmation','Are you sure you want to log out?')
         if log_out == 'yes':
                 root.destroy()
@@ -46,15 +43,8 @@ def goto_firstpage():
                 with open('currentlyLoggedUser.txt', 'w') as currentUser:
                         currentUser.write('')
 
-# def info_retreive():
-#         conn = sqlite3.connect('parkingManagement.db')
-#         c = conn.cursor()
-#         c.execute(f'SELECT * FROM employee WHERE ParkingSlotName = {slotInFile}')
-#         current_record = c.fetchone()
-#         print(current_record)
-#         conn.close()
-
 def delete():
+        '''delete a record'''
         with open('currentSlot.txt', 'r') as currentSlot:
                         slotInFile = currentSlot.read()
         answer = messagebox.askquestion("Delete Record?", f"Do you want to delete record from {slotInFile}?")
@@ -87,11 +77,11 @@ def select(slot):
         with open('currentSlot.txt', 'r') as currentSlot:
                 slotInFile = currentSlot.read(2)
 
-                
 
         if slotInFile != slot.cget('text') or slotInFile == '':
                 with open('currentSlot.txt', 'w') as currentSlot:
                         currentSlot.write(slot.cget('text'))
+                
                 conn = sqlite3.connect('parkingManagement.db')
                 c = conn.cursor()
                 with open('currentSlot.txt', 'r') as currentSlot:
@@ -129,6 +119,7 @@ def select(slot):
         elif slotInFile == slot.cget('text'):
                 with open('currentSlot.txt', 'w') as currentSlot:
                         currentSlot.write('')
+                        
                 nameValue.config(text = "")
                 ciValue.config(text = "")
                 coValue.config(text = "")
@@ -158,19 +149,6 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS Customer(
                VehicleType TEXT NOT NULL
 )''')
 
-cursor.execute('''CREATE TABLE IF NOT EXISTS Bill(
-               BillID INTEGER PRIMARY KEY AUTOINCREMENT,
-               CustomerID INTEGER,
-               Amount INTEGER,
-               UserID INTEGER,
-               FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID)
-)''')
-cursor.execute('''CREATE TABLE IF NOT EXISTS Bill_User(
-               BillID INTEGER,
-               UserID INTEGER,
-               FOREIGN KEY (BillID) REFERENCES Bill(BillID),
-               FOREIGN KEY (UserID) REFERENCES User(UserID)
-)''')
 
 conn.commit()
 conn.close()
@@ -208,18 +186,10 @@ loggedUser = cursor.fetchone()[3]
 print(loggedUser)
 loggedInInfoValue = Label(loggerInfoFrame,text = str(loggedUser), bg = '#FECE2F', font = ('Georgia bold', 17))
 loggedInInfoValue.pack()
+
 #Buttons for Sidebar----------------------------------------------
 parkingButton = Button(sideButtonFrame, text = 'Dashboard', font = ('Georgia bold', 16), height = 2, relief = FLAT, bg = '#FECE2F')
 parkingButton.pack(fill = X)
-
-# optionsButton = Button(sideButtonFrame, text = 'Options', font = ('Georgia bold', 16), height = 2, relief = FLAT, bg = '#FECE2F',command = goto_optionspage)
-# optionsButton.pack(fill = X)
-
-# currentRecordsButton = Button(sideButtonFrame, text = 'Current Records', font = ('Georgia bold', 16), height = 2)
-# currentRecordsButton.pack(fill = X)
-
-# statisticsButton = Button(sideButtonFrame, text = 'Statistics', font = ('Georgia bold', 16), height = 2)
-# statisticsButton.pack(fill = X)
 
 logoutButton = Button(sideButtonFrame, text = 'Logout', font = ('Georgia bold', 16), height = 2, relief = FLAT, bg = '#FECE2F',command = goto_firstpage)
 logoutButton.pack(fill = X)
