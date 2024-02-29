@@ -3,7 +3,7 @@ import sqlite3
 from PIL import ImageTk, Image
 from time import strftime
 from tkinter import messagebox
-
+import os
 #initiating currentSlot.txt which stores the recently clicked slot
 with open('currentSlot.txt','w') as currentSlot:
         currentSlot.write('')
@@ -21,17 +21,17 @@ def time():
 def goto_billpage():
         '''go to add page'''
         root.destroy()
-        import billpage
+        os.system('python SAAA-parking-management1\\billpage.py')
         
 def goto_addpage():
         '''go to add page'''
         root.destroy()
-        import add_page
+        os.system('python SAAA-parking-management1\\add_page.py')
 
 def goto_updatepage():
         '''go to update page'''
         root.destroy()
-        import updatepage
+        os.system('python SAAA-parking-management1\\updatepage.py')
 
 
 def goto_firstpage():
@@ -39,7 +39,7 @@ def goto_firstpage():
         log_out = messagebox.askquestion('Log out Confirmation','Are you sure you want to log out?')
         if log_out == 'yes':
                 root.destroy()
-                import firstpage
+                os.system('python SAAA-parking-management1\\firstpage.py')
                 with open('currentlyLoggedUser.txt', 'w') as currentUser:
                         currentUser.write('')
 
@@ -143,7 +143,8 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS Customer(
                Check_out TEXT NOT NULL,
                PhoneNumber INTEGER NOT NULL,
                Duration INTEGER NOT NULL,
-               VehicleNumber INTEGER NOT NULL,
+               VehicleN
+               umber INTEGER NOT NULL,
                VehicleName TEXT NOT NULL,
                ParkingSlotName TEXT NOT NULL,
                VehicleType TEXT NOT NULL

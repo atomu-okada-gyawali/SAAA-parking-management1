@@ -3,7 +3,7 @@ import tkinter.ttk as ttk
 import tkinter as tk
 import sqlite3
 from PIL import Image, ImageTk
-
+import os
 conn = sqlite3.connect('parkingManagement.db')
 cursor = conn.cursor()
 
@@ -40,11 +40,11 @@ def goto_login():
     
     '''
     root.destroy()
-    import loginpage
+    os.system('python SAAA-parking-management1\\loginpage.py')
 
 def goto_register():
     root.destroy()
-    import registrationpage
+    os.system('python SAAA-parking-management1\\registrationpage.py')
 
 #frame is used to create a separate frame inside the tkinter window and it's bg and geometry can be changed
 frame1 = Frame(root, height = 497,bg = "white", width = 700)
@@ -76,11 +76,6 @@ label2.pack()
 label2.place(anchor = "nw", x = 25, y = 15)
 
 
-
-
-
-
-
 #using label to write text inside the window and editing its background foreground and font according to the need 
 lbl1 = Label(text = "Welcome to SAAA", bg = "white", fg = "black", font = ("Georgia Bold",29 ))
 #place is used to adjust where we can place the written text to be inside the tkinter window
@@ -96,9 +91,6 @@ log_btn.place(x =700, y = 660 )
 signup_btn = Button(root, text = "         SIGNUP         ", bg = "#FFC125", fg = "black", font = ("Georgia",14),command = goto_register)
 #here login command is added in order to go the next window when we click the that specific button
 signup_btn.place(x = 700, y=740)
-
-
-
 
 
 #mainloop is the finish line of the window it is used to display the window without it no window is created 

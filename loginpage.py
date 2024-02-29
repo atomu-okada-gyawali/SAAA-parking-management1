@@ -1,10 +1,9 @@
 from tkinter import *
 from PIL import ImageTk, Image
 import sqlite3
-# import ctypes
+import os
 from tkinter import messagebox
 
-# ctypes.windll.shcore.setprocessDpiAwareness(1)
 win=Tk()
 win.configure(bg="white")
 win.geometry("1624x962")
@@ -29,6 +28,11 @@ def login():
         import mainpage
     except AssertionError as e:
         messagebox.askretrycancel('Login Error',str(e))
+
+def goto_firstpage():
+    win.destroy()
+    import firstpage
+
 
 img = Image.open("SAAA-parking-management1\\resources\\icon_loginpage.jpg")
 topg = ImageTk.PhotoImage(img)
@@ -77,7 +81,7 @@ Password.place(x=250,y=500)
 etn_username=Entry(win,text="Username",width="30")
 etn_username.place(x=250,y=440)
 button_login=Button(win,text="Login",fg="black",bg="#FECE2F",width="12",height="1",font=(30),command = login).place(x=450,y=680)
-exit=Button(win,text="Exit",fg="white",bg="black",width="12",height="1",font=(30)).place(x=450,y=730)
+exit=Button(win,text="Exit",fg="white",bg="black",width="12",height="1",font=(30), command = goto_firstpage).place(x=450,y=730)
 
 
 
