@@ -143,8 +143,7 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS Customer(
                Check_out TEXT NOT NULL,
                PhoneNumber INTEGER NOT NULL,
                Duration INTEGER NOT NULL,
-               VehicleN
-               umber INTEGER NOT NULL,
+               VehicleNumber INTEGER NOT NULL,
                VehicleName TEXT NOT NULL,
                ParkingSlotName TEXT NOT NULL,
                VehicleType TEXT NOT NULL
