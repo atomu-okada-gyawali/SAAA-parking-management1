@@ -73,7 +73,7 @@ title_frame=Frame(win,bg="white",height=232,width=796)
 title_frame.place(x=0,y=0)
 
 
-welcome=Label(win,text="Welcome back! PLease login to your account",font=("Open Sans",10),bg="white",width="50").place(x=180,y=160)
+welcome=Label(win,text="Welcome back! Please login to your account",font=("Open Sans",10),bg="white",width="50").place(x=180,y=160)
 heading=Label(title_frame,text="Login",bg="white",font=("Georgia",30,"bold")).place(x=300,y=80)
 username=Label(win,text="Username",bg="white",font=("Open Sans",20)).place(x=250,y=400)
 Password=Label(win,text="Password",bg="white",font=("Open Sanas",20))
